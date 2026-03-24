@@ -1,14 +1,13 @@
-# DevPilot 2026 – Lab 3 Milestone Skeleton
+# DevPilot 2026 â€“ Lab 3 Milestone Skeleton
 
-This repo contains the folder and package scaffolding for the DevPilot 2026 micro-frontend + Apollo Federation stack. No business logic has been implemented; only the architecture, package manifests, and placeholder entrypoints are provided so the team can start coding immediately.
 
 ## Workspace Layout
-- `gateway/` – Apollo Gateway exposing `/graphql` and federating the two subgraphs.
-- `services/auth-service/` – Auth subgraph for session-based registration/login/logout/currentUser using Mongo-backed sessions.
-- `services/projects-service/` – Projects subgraph for projects, feature requests, and drafts with authorization.
-- `frontend/shell/` – Host micro frontend: owns Apollo Client, routing, auth state, and loads remotes.
-- `frontend/projects-app/` – Remote micro frontend handling project workflows.
-- `frontend/ai-review-app/` – Remote micro frontend placeholder for future AI review UI.
+- `gateway/` â€“ Apollo Gateway exposing `/graphql` and federating the two subgraphs.
+- `services/auth-service/` â€“ Auth subgraph for session-based registration/login/logout/currentUser using Mongo-backed sessions.
+- `services/projects-service/` â€“ Projects subgraph for projects, feature requests, and drafts with authorization.
+- `frontend/shell/` â€“ Host micro frontend: owns Apollo Client, routing, auth state, and loads remotes.
+- `frontend/projects-app/` â€“ Remote micro frontend handling project workflows.
+- `frontend/ai-review-app/` â€“ Remote micro frontend placeholder for future AI review UI.
 
 ## Getting Started
 1. Run `npm install` at the repo root to install all workspace dependencies (uses npm workspaces).
