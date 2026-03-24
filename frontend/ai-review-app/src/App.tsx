@@ -7,7 +7,7 @@ const App: React.FC = () => {
         <p className="text-sm uppercase tracking-wider text-slate-500">Remote</p>
         <h1 className="text-3xl font-semibold text-slate-900">AI Review App</h1>
         <p className="text-slate-600 mt-2">
-          Placeholder UI for future Agentic RAG workflows. Replace with actual review flows later.
+          Placeholder
         </p>
       </header>
       <main className="max-w-3xl mx-auto space-y-4 text-slate-700">
