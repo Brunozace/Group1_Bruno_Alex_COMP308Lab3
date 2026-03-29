@@ -9,7 +9,7 @@ export default defineConfig({
   plugins: [
     react(),
     federation({
-      name: 'projects_app',
+      name: 'projectsApp',
       filename: 'remoteEntry.js',
       exposes: {
         './ProjectsApp': './src/App'
