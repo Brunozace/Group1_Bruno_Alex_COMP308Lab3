@@ -1,0 +1,9 @@
+import{r as c}from"./index-CtmpQeow.js";var d={exports:{}},a={};/**
+ * @license React
+ * react-jsx-runtime.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */var p=c,m=Symbol.for("react.element"),u=Symbol.for("react.fragment"),f=Object.prototype.hasOwnProperty,h=p.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.ReactCurrentOwner,j={key:!0,ref:!0,__self:!0,__source:!0};function x(t,r,n){var s,l={},i=null,o=null;n!==void 0&&(i=""+n),r.key!==void 0&&(i=""+r.key),r.ref!==void 0&&(o=r.ref);for(s in r)f.call(r,s)&&!j.hasOwnProperty(s)&&(l[s]=r[s]);if(t&&t.defaultProps)for(s in r=t.defaultProps,r)l[s]===void 0&&(l[s]=r[s]);return{$$typeof:m,type:t,key:i,ref:o,props:l,_owner:h.current}}a.Fragment=u;a.jsx=x;a.jsxs=x;d.exports=a;var e=d.exports;const y=()=>e.jsxs("div",{className:"min-h-screen px-6 py-10",children:[e.jsxs("header",{className:"max-w-3xl mx-auto mb-8",children:[e.jsx("p",{className:"text-sm uppercase tracking-wider text-slate-500",children:"Remote"}),e.jsx("h1",{className:"text-3xl font-semibold text-slate-900",children:"AI Review App"}),e.jsx("p",{className:"text-slate-600 mt-2",children:"Placeholder"})]}),e.jsx("main",{className:"max-w-3xl mx-auto space-y-4 text-slate-700",children:e.jsxs("div",{className:"rounded-lg border border-dashed border-slate-300 bg-white p-4",children:[e.jsx("p",{className:"font-semibold",children:"Future hooks"}),e.jsxs("ul",{className:"list-disc ml-6 text-sm mt-2 space-y-1",children:[e.jsx("li",{children:"Upload draft context + tests"}),e.jsx("li",{children:"Invoke AI review pipeline"}),e.jsx("li",{children:"Display findings, severity, and suggested fixes"})]})]})})]});export{y as default,e as j};
