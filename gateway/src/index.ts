@@ -18,11 +18,14 @@ class AuthenticatedDataSource extends RemoteGraphQLDataSource {
 const startGateway = async () => {
   const app = express();
 
+  const authUrl = process.env.AUTH_SUBGRAPH_URL || "http://localhost:4001/graphql";
+  const projectsUrl = process.env.PROJECTS_SUBGRAPH_URL || "http://localhost:4002/graphql";
+
   const gateway = new ApolloGateway({
     supergraphSdl: new IntrospectAndCompose({
       subgraphs: [
-        { name: "auth", url: "http://localhost:4001/graphql" },
-        { name: "projects", url: "http://localhost:4002/graphql" },
+        { name: "auth", url: authUrl },
+        { name: "projects", url: projectsUrl },
       ],
     }),
     buildService({ url }) {
@@ -38,7 +41,7 @@ const startGateway = async () => {
 
   app.use(
     cors({
-      origin: "http://localhost:5173",
+      origin: process.env.CORS_ORIGIN || "http://localhost:5173",
       credentials: true,
     })
   );

@@ -11,8 +11,8 @@ export default defineConfig({
     federation({
       name: 'shell',
       remotes: {
-        projectsApp: 'http://localhost:5174/assets/remoteEntry.js',
-        aiReviewApp: 'http://localhost:5175/assets/remoteEntry.js'
+        projectsApp: "http://localhost:5174/assets/remoteEntry.js",
+        aiReviewApp: "http://localhost:5175/assets/remoteEntry.js",
       },
       shared: ['react', 'react-dom', 'react-router-dom', '@apollo/client', 'graphql']
     })

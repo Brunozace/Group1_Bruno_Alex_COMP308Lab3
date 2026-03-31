@@ -1,4 +1,4 @@
-import {gql} from "graphql-tag";
+import { gql } from "graphql-tag";
 
 export const typeDefs = gql`
   type Project {
@@ -25,20 +25,21 @@ export const typeDefs = gql`
     featureId: ID!
     author: ID!
     content: String!
+    version: Int!
     createdAt: String!
     updatedAt: String!
   }
 
   type Query {
-    projects: [Project]
+    projectsByUser: [Project!]!
     project(id: ID!): Project
-    featureRequests(projectId: ID!): [FeatureRequest]
-    drafts(featureId: ID!): [Draft]
+    featureRequests(projectId: ID!): [FeatureRequest!]!
+    draftsByFeature(featureId: ID!): [Draft!]!
   }
 
   type Mutation {
-    createProject(title: String!, description: String!, owner: ID!): Project
-    createFeatureRequest(projectId: ID!, title: String!, description: String!): FeatureRequest
-    createDraft(featureId: ID!, author: ID!, content: String!): Draft
+    createProject(title: String!, description: String!): Project!
+    addFeatureRequest(projectId: ID!, title: String!, description: String!): FeatureRequest!
+    submitDraft(featureId: ID!, content: String!): Draft!
   }
 `;

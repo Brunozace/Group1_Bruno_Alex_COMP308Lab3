@@ -105,7 +105,7 @@ export const resolvers = {
             return;
           }
 
-          context.res.clearCookie("devpilot.sid");
+          context.res.clearCookie(process.env.SESSION_COOKIE_NAME || "devpilot.sid");
 
           resolve({
             success: true,

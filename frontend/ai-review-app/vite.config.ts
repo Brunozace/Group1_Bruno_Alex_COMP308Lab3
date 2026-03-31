@@ -4,12 +4,13 @@ import federation from '@originjs/vite-plugin-federation';
 
 export default defineConfig({
   server: {
+    host: true,
     port: 5175
   },
   plugins: [
     react(),
     federation({
-      name: 'ai_review_app',
+      name: 'aiReviewApp',
       filename: 'remoteEntry.js',
       exposes: {
         './AIReviewApp': './src/App'

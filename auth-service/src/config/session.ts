@@ -9,7 +9,7 @@ declare module "express-session" {
 
 export const createSessionMiddleware = () =>
   session({
-    name: "devpilot.sid",
+    name: process.env.SESSION_COOKIE_NAME || "devpilot.sid",
     secret: process.env.SESSION_SECRET || "devpilot-secret",
     resave: false,
     saveUninitialized: false,
@@ -19,8 +19,8 @@ export const createSessionMiddleware = () =>
     }),
     cookie: {
       httpOnly: true,
-      secure: false, // change to true in production with HTTPS
-      sameSite: "lax",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
     },
   });

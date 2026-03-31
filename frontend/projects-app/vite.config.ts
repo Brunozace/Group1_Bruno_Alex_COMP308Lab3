@@ -4,15 +4,16 @@ import federation from '@originjs/vite-plugin-federation';
 
 export default defineConfig({
   server: {
+    host: true,
     port: 5174
   },
   plugins: [
     react(),
     federation({
-      name: 'projects_app',
+      name: 'projectsApp',
       filename: 'remoteEntry.js',
       exposes: {
-        './ProjectsApp': './src/App'
+        "./ProjectsApp": "./src/App"
       },
       shared: ['react', 'react-dom', 'react-router-dom', '@apollo/client', 'graphql']
     })
