@@ -1,0 +1,22 @@
+{
+  "name": "devpilot-backend",
+  "private": true,
+  "scripts": {
+    "dev:auth": "npm run dev --prefix microservices/auth-service",
+    "dev:projects": "npm run dev --prefix microservices/projects-service",
+    "dev:ai-review": "npm run dev --prefix microservices/ai-review-service",
+    "dev:gateway": "npm run dev --prefix gateway",
+    "dev": "concurrently \"npm run dev:auth\" \"npm run dev:projects\" \"npm run dev:ai-review\" \"npm run dev:gateway\"",
+
+    "build": "npm run build --prefix microservices/auth-service && npm run build --prefix microservices/projects-service && npm run build --prefix microservices/ai-review-service && npm run build --prefix gateway",
+
+    "start:auth": "npm run start --prefix microservices/auth-service",
+    "start:projects": "npm run start --prefix microservices/projects-service",
+    "start:ai-review": "npm run start --prefix microservices/ai-review-service",
+    "start:gateway": "npm run start --prefix gateway",
+    "start": "concurrently \"npm run start:auth\" \"npm run start:projects\" \"npm run start:ai-review\" \"npm run start:gateway\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.1"
+  }
+}
