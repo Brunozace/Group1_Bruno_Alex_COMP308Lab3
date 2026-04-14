@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite --host --port 5174",
     "build": "vite build",
-    "preview": "vite preview"
+    "build:watch": "vite build --watch",
+    "preview": "vite preview --host localhost --port 5174 --strictPort"
   },
   "dependencies": {
     "@apollo/client": "^3.9.11",
@@ -25,5 +26,10 @@
     "tailwindcss": "^3.4.3",
     "typescript": "^5.4.3",
     "vite": "^5.2.0"
-  }
+  },
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }
