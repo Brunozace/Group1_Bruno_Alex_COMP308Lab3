@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { gql, useMutation, useQuery } from "@apollo/client";
+import "./index.css";
 
 const PROJECTS = gql`
   query ProjectsByUser {

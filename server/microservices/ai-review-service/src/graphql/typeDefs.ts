@@ -3,8 +3,11 @@ import { gql } from "graphql-tag";
 export const typeDefs = gql`
   type Citation {
     documentName: String!
+    category: String!
+    section: String!
     chunkId: String!
     excerpt: String!
+    relevanceScore: Float!
   }
 
   type ReviewIssue {
@@ -20,6 +23,8 @@ export const typeDefs = gql`
     changed: Boolean!
     notes: String
     confidenceAdjusted: Boolean!
+    unsupportedClaims: [String!]!
+    citationRevisions: [String!]!
   }
 
   type DraftReview {
@@ -28,6 +33,8 @@ export const typeDefs = gql`
     reviewedBy: String!
     summary: String!
     issues: [ReviewIssue!]!
+    initialConfidence: Float!
+    finalConfidence: Float!
     overallConfidence: Float!
     citations: [Citation!]!
     reflection: ReflectionInfo!

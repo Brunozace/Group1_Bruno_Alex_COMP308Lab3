@@ -10,13 +10,16 @@ import { buildSubgraphSchema } from "@apollo/subgraph";
 import { typeDefs } from "./graphql/typeDefs.js";
 import { resolvers } from "./graphql/resolvers.js";
 import { createSessionMiddleware } from "./config/session.js";
+import { seedKnowledgeDocuments } from "./services/knowledgeSeeder.js";
 
 const startServer = async () => {
   const app = express();
 
   await mongoose.connect(
-    process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/aiReviewServiceDB"
+    process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/devpilot"
   );
+
+  await seedKnowledgeDocuments();
 
   const server = new ApolloServer({
     schema: buildSubgraphSchema([{ typeDefs, resolvers }])

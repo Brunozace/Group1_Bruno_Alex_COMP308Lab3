@@ -3,6 +3,7 @@ import mongoose, { Schema, Document, Model } from "mongoose";
 export interface IKnowledgeDocument extends Document {
   title: string;
   category: string;
+  section: string;
   chunkId: string;
   content: string;
   embedding: number[];
@@ -16,6 +17,11 @@ const KnowledgeDocumentSchema = new Schema<IKnowledgeDocument>(
       trim: true
     },
     category: {
+      type: String,
+      required: true,
+      trim: true
+    },
+    section: {
       type: String,
       required: true,
       trim: true

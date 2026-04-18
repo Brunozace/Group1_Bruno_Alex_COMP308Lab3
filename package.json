@@ -4,18 +4,19 @@
   "private": true,
   "packageManager": "npm@10.5.0",
   "workspaces": [
-    "gateway",
-    "auth-service",
-    "projects-service",
     "frontend/*"
   ],
   "engines": {
     "node": ">=18.18"
   },
   "scripts": {
-    "bootstrap": "npm install --workspaces",
-    "dev:backend": "echo \"run gateway, auth-service, projects-service separately\"",
-    "dev:frontend": "echo \"start shell and remotes via npm run dev in each frontend workspace\"",
+    "bootstrap": "npm install && npm install --prefix server",
+    "dev:backend": "npm run dev --prefix server",
+    "dev:shell": "npm run dev --workspace frontend/shell",
+    "dev:projects-app": "npm run dev --workspace frontend/projects-app",
+    "dev:ai-review-app": "npm run dev --workspace frontend/ai-review-app",
+    "build:backend": "npm run build --prefix server",
+    "build:frontend": "npm run build --workspaces --if-present",
     "lint": "echo \"add package-specific lint scripts\""
   }
 }

@@ -1,9 +1,12 @@
 import { z } from "zod";
 
 export const CitationSchema = z.object({
-  documentName: z.string(),
-  chunkId: z.string(),
-  excerpt: z.string()
+  documentName: z.string().min(1),
+  category: z.string().min(1),
+  section: z.string().min(1),
+  chunkId: z.string().min(1),
+  excerpt: z.string().min(1),
+  relevanceScore: z.number().min(0).max(1)
 });
 
 export const ReviewIssueSchema = z.object({
@@ -16,14 +19,18 @@ export const ReviewIssueSchema = z.object({
 });
 
 export const DraftReviewSchema = z.object({
-  summary: z.string(),
+  summary: z.string().min(1),
   issues: z.array(ReviewIssueSchema),
+  initialConfidence: z.number().min(0).max(1),
+  finalConfidence: z.number().min(0).max(1),
   overallConfidence: z.number().min(0).max(1),
   citations: z.array(CitationSchema),
   reflection: z.object({
     changed: z.boolean(),
     notes: z.string().optional(),
-    confidenceAdjusted: z.boolean()
+    confidenceAdjusted: z.boolean(),
+    unsupportedClaims: z.array(z.string()),
+    citationRevisions: z.array(z.string())
   })
 });
 

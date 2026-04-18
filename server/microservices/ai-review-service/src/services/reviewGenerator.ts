@@ -1,75 +1,146 @@
 import type { DraftReviewOutput } from "../schemas/reviewSchema.js";
+import type { RetrievedChunk } from "./retriever.js";
+
+const clamp = (value: number) => Math.min(1, Math.max(0, value));
+
+const probabilisticConfidence = (base: number) => clamp(base + (Math.random() - 0.5) * 0.08);
+
+const makeCitation = (doc: RetrievedChunk) => ({
+  documentName: doc.title,
+  category: doc.category,
+  section: doc.section,
+  chunkId: doc.chunkId,
+  excerpt: doc.content.slice(0, 220),
+  relevanceScore: doc.relevanceScore
+});
+
+const findDocs = (docs: RetrievedChunk[], categories: string[], fallbackCount = 2) => {
+  const selected = docs.filter((doc) => categories.includes(doc.category)).slice(0, fallbackCount);
+  return selected.length ? selected : docs.slice(0, fallbackCount);
+};
 
 export const generateStructuredReview = async (
   content: string,
-  retrievedDocs: Array<{
-    title: string;
-    chunkId: string;
-    content: string;
-  }>
+  retrievedDocs: RetrievedChunk[]
 ): Promise<DraftReviewOutput> => {
-  const citations = retrievedDocs.map((doc) => ({
-    documentName: doc.title,
-    chunkId: doc.chunkId,
-    excerpt: doc.content.slice(0, 180)
-  }));
+  const citations = retrievedDocs.map(makeCitation);
+  const normalized = content.toLowerCase();
 
   const issues: DraftReviewOutput["issues"] = [];
 
-  if (content.toLowerCase().includes("resolver") && !content.toLowerCase().includes("auth")) {
+  if (
+    (normalized.includes("resolver") || normalized.includes("mutation") || normalized.includes("query")) &&
+    !/(auth|session|owner|authorized|authorization|permission)/.test(normalized)
+  ) {
+    const issueCitations = findDocs(retrievedDocs, ["security", "architecture"]).map(makeCitation);
     issues.push({
       type: "security",
       severity: "high",
-      description: "The draft may be missing clear authorization checks for protected resolver logic.",
+      description:
+        "The draft describes resolver or mutation logic without clearly scoping access to the authenticated user.",
       suggestions: [
-        "Verify the user session before executing protected resolver actions.",
-        "Restrict access based on the logged-in user where appropriate."
+        "Read the current session before executing protected resolver logic.",
+        "Filter project, feature, and draft records by owner or membership before returning or mutating them.",
+        "Avoid trusting client-provided ids without an ownership check."
       ],
-      confidenceScore: 0.8,
-      citations: citations.slice(0, 2)
+      confidenceScore: probabilisticConfidence(0.82),
+      citations: issueCitations
     });
   }
 
-  if (!content.toLowerCase().includes("error")) {
+  if (!/(validate|validation|zod|invalid|required|error|try|catch)/.test(normalized)) {
+    const issueCitations = findDocs(retrievedDocs, ["reliability", "quality"]).map(makeCitation);
     issues.push({
       type: "reliability",
       severity: "medium",
-      description: "The draft does not clearly explain error handling or validation paths.",
+      description:
+        "The draft does not identify validation rules or safe error handling for malformed input and failure paths.",
       suggestions: [
-        "Add explicit input validation.",
-        "Return safe and consistent error messages for failure cases."
+        "Define validation checks for required fields, expected values, and ownership assumptions.",
+        "Return consistent user-safe error messages from failed resolver paths.",
+        "Avoid saving generated or user-provided data until validation has passed."
       ],
-      confidenceScore: 0.72,
-      citations: citations.slice(0, 2)
+      confidenceScore: probabilisticConfidence(0.74),
+      citations: issueCitations
     });
   }
 
-  if (!content.toLowerCase().includes("test")) {
+  if (!/(test|spec|verify|coverage|manual qa|integration)/.test(normalized)) {
+    const issueCitations = findDocs(retrievedDocs, ["quality"]).map(makeCitation);
     issues.push({
       type: "quality",
       severity: "low",
       description: "The draft does not mention testing or verification steps.",
       suggestions: [
-        "Describe how the feature will be tested.",
-        "Add unit or integration test coverage where possible."
+        "Add unit or integration tests for the main success path.",
+        "Verify authorization, validation, and error paths.",
+        "Document a manual verification path for the demo if automated tests are not yet available."
       ],
-      confidenceScore: 0.65,
-      citations: citations.slice(0, 1)
+      confidenceScore: probabilisticConfidence(0.66),
+      citations: issueCitations
     });
   }
+
+  if (
+    /(cookie|session|login|logout|credential|password)/.test(normalized) &&
+    !/(httponly|http-only|server-side|connect-mongo|mongostore)/.test(normalized)
+  ) {
+    const issueCitations = findDocs(retrievedDocs, ["security"]).map(makeCitation);
+    issues.push({
+      type: "security",
+      severity: "medium",
+      description:
+        "The draft references authentication or session behavior without documenting HTTP-only cookie and server-side session handling.",
+      suggestions: [
+        "State that authentication state is carried by HTTP-only cookies.",
+        "Use the shared Mongo-backed session store across gateway-backed subgraphs.",
+        "Avoid localStorage or token-based persistence for authentication state."
+      ],
+      confidenceScore: probabilisticConfidence(0.77),
+      citations: issueCitations
+    });
+  }
+
+  if (/(database|mongo|findbyid|_id|id)/.test(normalized) && !/(owner|author|membership|scope|filter)/.test(normalized)) {
+    const issueCitations = findDocs(retrievedDocs, ["security", "data"]).map(makeCitation);
+    issues.push({
+      type: "data-access",
+      severity: "high",
+      description:
+        "The draft appears to use identifiers or database access without describing ownership-scoped queries.",
+      suggestions: [
+        "Include the logged-in user's owner or author id in database filters.",
+        "Reject access when a parent project or feature is not owned by the active user.",
+        "Keep review history tied to the exact draft version."
+      ],
+      confidenceScore: probabilisticConfidence(0.79),
+      citations: issueCitations
+    });
+  }
+
+  const averageIssueConfidence =
+    issues.length > 0
+      ? issues.reduce((sum, issue) => sum + issue.confidenceScore, 0) / issues.length
+      : probabilisticConfidence(0.88);
 
   return {
     summary:
       issues.length > 0
-        ? "The draft is promising but there are review concerns related to implementation quality, safety, or completeness."
-        : "The draft appears reasonably aligned with the retrieved guidance.",
+        ? `The draft is reviewable, but the retrieval-grounded pass found ${issues.length} concern${
+            issues.length === 1 ? "" : "s"
+          } related to safety, reliability, data access, or verification.`
+        : "The draft appears aligned with the retrieved engineering guidance and has no major flagged issues.",
     issues,
-    overallConfidence: issues.length > 0 ? 0.74 : 0.88,
+    initialConfidence: averageIssueConfidence,
+    finalConfidence: averageIssueConfidence,
+    overallConfidence: averageIssueConfidence,
     citations,
     reflection: {
       changed: false,
       notes: "Initial structured review generated from retrieved knowledge documents.",
-      confidenceAdjusted: false
+      confidenceAdjusted: false,
+      unsupportedClaims: [],
+      citationRevisions: []
     }
   };
 };

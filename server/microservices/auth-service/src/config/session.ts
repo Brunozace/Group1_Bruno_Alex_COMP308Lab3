@@ -14,7 +14,10 @@ export const createSessionMiddleware = () =>
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-      mongoUrl: process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/devpilot",
+      mongoUrl:
+        process.env.SESSION_STORE_URI ||
+        process.env.MONGODB_URI ||
+        "mongodb://127.0.0.1:27017/devpilot",
       collectionName: "sessions",
     }),
     cookie: {

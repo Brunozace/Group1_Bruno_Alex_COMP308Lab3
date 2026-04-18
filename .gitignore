@@ -3,5 +3,7 @@ npm-debug.log*
 dist
 .env
 .env.*
+!.env.example
+!**/.env.example
 .DS_Store
 *.log
